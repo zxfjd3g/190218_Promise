@@ -3,35 +3,32 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>自定义Promise_使用测试</title>
+  <title>原生Promise_使用测试</title>
 </head>
 
 <body>
-  <script src="./lib/Promise3.js"></script>
+
   <!-- 
     1. promise的链式调用
     2. 执行顺序问题
    -->
   <script>
     const p = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(1)
-        // reject(2)
-        // throw 3
-      }, 100);
-      
+      // resolve(1)
+      reject(2)
+      // throw 3
     })
 
     p.then(
       value => {
         console.log('onResolved()', value)
         // return 4
-        throw 5
+        // throw 5
       },
       reason => {
         console.log('onRejected()', reason)
         // return 6
-        // throw 7
+        throw 7
       }
     ).then(
       value => {
@@ -46,7 +43,13 @@
     then()返回的是一个新的promise对象, 它的结果由这个then()指定的回调函数的结果来决定
     
     */
+
+    
+
   </script>
+
+
+
 </body>
 
 </html>

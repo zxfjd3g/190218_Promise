@@ -43,5 +43,6 @@
 
 ## 4. 自定义Promise
 ## 1. 整体结构(定义所有语法)
-## 2. 
+## 2. Promise构造函数
+## 3. Promise.prototype.then/catch()
 
