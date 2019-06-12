@@ -7,12 +7,12 @@
 </head>
 
 <body>
-  <script src="./lib/Promise3.js"></script>
+  <script src="./lib/Promise4.js"></script>
   <!-- 
     1. promise的链式调用
     2. 执行顺序问题
    -->
-  <script>
+  <!-- <script>
     const p = new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(1)
@@ -27,6 +27,8 @@
         console.log('onResolved()', value)
         // return 4
         throw 5
+        // return new Promise((resolve, reject) => resolve(4))
+        // return new Promise((resolve, reject) => reject(5))
       },
       reason => {
         console.log('onRejected()', reason)
@@ -39,6 +41,16 @@
       },
       reason => {
         console.log('onRejected2()', reason)
+        throw 8
+      }
+    ).catch(reason => {
+      console.log('onRejected3()', reason)
+    }).then(
+      value => {
+        console.log('onResolved4()', value)
+      },
+      reason => {
+        console.log('onRejected4()', reason)
       }
     )
 
@@ -46,7 +58,24 @@
     then()返回的是一个新的promise对象, 它的结果由这个then()指定的回调函数的结果来决定
     
     */
+  </script> -->
+
+  <script>
+    const p1 = Promise.resolve(1)
+    const p2 = Promise.resolve(Promise.resolve('atguigu'))
+    const p3 = Promise.reject(true)
+
+    // const p4 = Promise.all([ p2, p1, p3])
+    // const p4 = Promise.all([p2, p1, 3])
+    // const p4 = Promise.race([ p3, p2, p1])
+    const p4 = Promise.race([ p2, p1, p3])
+    p4.then(
+      values => console.log('完全成功了', values),
+      reason => console.log('失败了', reason)
+    )
   </script>
+
+
 </body>
 
 </html>

@@ -102,42 +102,46 @@
     // 如果onRejected没有指定为函数,直接将接收的reason抛出让新的promise进入失败
     onRejected = typeof onRejected === 'function' ? onRejected : reason => {throw reason}
 
+
     return new Promise((resolve, reject) => {
+
+      /* 
+      执行成功/失败的回调函数, 根据执行的结果来指定新的promise的结果
+      */
+      function handle(callback) {
+        try {
+          const result = callback(self.data)
+          // 如果回调函数执行的结果为promise对象
+          // 将这个promise对象的结果为新的promise对象的结果
+          if (result instanceof Promise) {
+            /* result.then(
+              value => resolve(value),
+              reason => reject(reason)
+            ) */
+            result.then(resolve, reject)
+          /*  result.then((value) => {
+              resolve(value)
+            }, (reason) => {
+              reject(reason)
+            }) */
+          } else {
+            resolve(result)
+          }
+        } catch (error) {
+          reject(error)
+        }
+      }
+
       if (status === 'resolved') { // 当前promise已经成功了
         // 立即异步调用onResolved
         setTimeout(() => {
-          try {
-            const result = onResolved(self.data)
-            // 如果回调函数执行的结果为promise对象
-            // 将这个promise对象的结果为新的promise对象的结果
-            if (result instanceof Promise) {
-              /* result.then(
-                value => resolve(value),
-                reason => reject(reason)
-              ) */
-              result.then(resolve, reject)
-            } else {
-              resolve(result)
-            }
-            
-          } catch (error) {
-            reject(error)
-          }
-        });
+          handle(onResolved)
+        })
       } else if (status === 'rejected') { // 当前promise已经失败了
         // 立即异步调用onRejected
         setTimeout(() => {
-          try {
-            const result = onRejected(self.data)
-            if (result instanceof Promise) {
-              result.then(resolve, reject)
-            } else {
-              resolve(result)
-            }
-          } catch (error) {
-            reject(error)
-          }
-        });
+          handle(onRejected)
+        })
       } else { // 当前promise的结果还未确定
         // 将2个回调函数保存到callbacks
         /* self.callbacks.push({
@@ -147,29 +151,10 @@
 
         self.callbacks.push({
           onResolved(value) {
-            try {
-              const result = onResolved(self.data)
-              if (result instanceof Promise) {
-                result.then(resolve, reject)
-              } else {
-                resolve(result)
-              }
-             
-            } catch (error) {
-              reject(error)
-            }
+            handle(onResolved)
           },
           onRejected(reason) {
-            try {
-              const result = onRejected(self.data)
-              if (result instanceof Promise) {
-                result.then(resolve, reject)
-              } else {
-                resolve(result)
-              }
-            } catch (error) {
-              reject(error)
-            }
+            handle(onRejected)
           }
         })
       }

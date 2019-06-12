@@ -12,10 +12,10 @@
     1. promise的链式调用
     2. 执行顺序问题
    -->
-  <script>
+  <!-- <script>
     const p = new Promise((resolve, reject) => {
-      // resolve(1)
-      reject(2)
+      resolve(1)
+      // reject(2)
       // throw 3
     })
 
@@ -24,6 +24,8 @@
         console.log('onResolved()', value)
         // return 4
         // throw 5
+        // return Promise.resolve(8)
+        return Promise.reject(9)
       },
       reason => {
         console.log('onRejected()', reason)
@@ -41,10 +43,26 @@
 
     /* 
     then()返回的是一个新的promise对象, 它的结果由这个then()指定的回调函数的结果来决定
-    
+    1. 抛出异常 ==> 失败, 失败的reason是异常
+    2. 返回一个新的promise ==> 回调函数返回promise的结果决定了then()返回promise结果
+    3. 其它  ===> 成功, 成功的value为函数的返回
     */
 
     
+
+  </script> -->
+
+  <script>
+    const p1 = Promise.resolve(1)
+    const p2 = Promise.resolve(Promise.resolve('atguigu'))
+    // const p3 = Promise.reject(true)
+
+    // const p4 = Promise.all([ p2, p1, p3])
+    const p4 = Promise.all([ p2, p1, 3])
+    p4.then(
+      values => console.log('完全成功了', values),
+      reason => console.log('失败了', reason)
+    )
 
   </script>
 

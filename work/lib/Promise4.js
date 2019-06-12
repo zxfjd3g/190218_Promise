@@ -102,42 +102,46 @@
     // 如果onRejected没有指定为函数,直接将接收的reason抛出让新的promise进入失败
     onRejected = typeof onRejected === 'function' ? onRejected : reason => {throw reason}
 
+
     return new Promise((resolve, reject) => {
+
+      /* 
+      执行成功/失败的回调函数, 根据执行的结果来指定新的promise的结果
+      */
+      function handle(callback) {
+        try {
+          const result = callback(self.data)
+          // 如果回调函数执行的结果为promise对象
+          // 将这个promise对象的结果为新的promise对象的结果
+          if (result instanceof Promise) {
+            /* result.then(
+              value => resolve(value),
+              reason => reject(reason)
+            ) */
+            result.then(resolve, reject)
+          /*  result.then((value) => {
+              resolve(value)
+            }, (reason) => {
+              reject(reason)
+            }) */
+          } else {
+            resolve(result)
+          }
+        } catch (error) {
+          reject(error)
+        }
+      }
+
       if (status === 'resolved') { // 当前promise已经成功了
         // 立即异步调用onResolved
         setTimeout(() => {
-          try {
-            const result = onResolved(self.data)
-            // 如果回调函数执行的结果为promise对象
-            // 将这个promise对象的结果为新的promise对象的结果
-            if (result instanceof Promise) {
-              /* result.then(
-                value => resolve(value),
-                reason => reject(reason)
-              ) */
-              result.then(resolve, reject)
-            } else {
-              resolve(result)
-            }
-            
-          } catch (error) {
-            reject(error)
-          }
-        });
+          handle(onResolved)
+        })
       } else if (status === 'rejected') { // 当前promise已经失败了
         // 立即异步调用onRejected
         setTimeout(() => {
-          try {
-            const result = onRejected(self.data)
-            if (result instanceof Promise) {
-              result.then(resolve, reject)
-            } else {
-              resolve(result)
-            }
-          } catch (error) {
-            reject(error)
-          }
-        });
+          handle(onRejected)
+        })
       } else { // 当前promise的结果还未确定
         // 将2个回调函数保存到callbacks
         /* self.callbacks.push({
@@ -147,29 +151,10 @@
 
         self.callbacks.push({
           onResolved(value) {
-            try {
-              const result = onResolved(self.data)
-              if (result instanceof Promise) {
-                result.then(resolve, reject)
-              } else {
-                resolve(result)
-              }
-             
-            } catch (error) {
-              reject(error)
-            }
+            handle(onResolved)
           },
           onRejected(reason) {
-            try {
-              const result = onRejected(self.data)
-              if (result instanceof Promise) {
-                result.then(resolve, reject)
-              } else {
-                resolve(result)
-              }
-            } catch (error) {
-              reject(error)
-            }
+            handle(onRejected)
           }
         })
       }
@@ -188,14 +173,31 @@
   返回一个以给定值解析后的Promise 对象
   */
   Promise.resolve = function (value) {
-    
+    return new Promise ((resolve, reject) => {
+      // 如果value是promise, 将这个promise结果作为新的promise的结果
+      if (value instanceof Promise) {
+        /* value.then(
+          value => {
+            resolve(value)
+          },
+          reason => {
+            reject(reason)
+          }
+        ) */
+        value.then(resolve, reject)
+      } else {
+        resolve(value)
+      }
+    })
   }
 
   /* 
   返回一个带有拒绝原因reason参数的Promise对象
   */
   Promise.reject = function (reason) {
-    
+    return new Promise((resolve, reject) => {
+      reject(reason)
+    })
   }
 
   /* 
@@ -203,17 +205,64 @@
   只要有一个promise失败了最终就直接失败(失败的原因为reason)
   */
   Promise.all = function (promises) {
+    
+    let resolvedCount = 0 // 保存已成功的个数
+    const values = new Array(promises.length)
 
+    return new Promise((resolve, reject) => {
+
+      for (let i = 0; i < promises.length; i++) {
+        const p = promises[i]
+         Promise.resolve(p).then(
+           value => {
+             // 每成功一个增加1
+             resolvedCount++
+             // 将当前value保存到values
+             values[i] = value
+
+             // 全部都成功了, 新的promise就成功了
+             if (resolvedCount === promises.length) {
+               resolve(values)
+             }
+           },
+           reason => { // 当前的promise失败了
+             reject(reason) // 新的promise直接失败了
+           }
+         )
+      }
+    })
   }
 
   /* 
   返回一个Promise对象, 只要有一个promise有了结果, 这个结果就是最终的结果, 
   */
   Promise.race = function (promises) {
-
+    return new Promise((resolve, reject) => {
+      promises.forEach(p => {
+        Promise.resolve(p).then(
+          value => resolve(value),
+          reason => reject(reason),
+        )
+      })
+    })
   }
 
   // 暴露Promise
   window.Promise = Promise
 
+
+
+  /* function fn(f) {
+    f('abc')
+  }
+
+  function fn2(msg) {
+    console.log(msg)
+  }
+
+  fn(function (content) {
+    fn2(content)
+  })
+
+  fn(fn2) */
 })(window)
