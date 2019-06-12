@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>自定义Promise_使用测试</title>
+</head>
+
+<body>
+
+  <script type="text/javascript" src="./lib/Promise.js"></script>
+<!-- 
+  <script type="text/javascript">
+    const p = new Promise((resolve, reject) => {
+      console.log('excutor()')
+      //setTimeout(() => {
+        const time = Date.now()
+        if(time%3 === 0) { // 成功
+          console.log('resolve()之前')
+          resolve('成功的数据')
+          console.log('resolve()之后')
+
+        } else if (time%3===1){ // 失败
+          console.log('reject()之前')
+          reject('失败的原因数据')
+          console.log('reject()之后')
+        } else { // 出错
+          throw new Error('出错啦...')
+        }
+    // }, 1000)
+    })
+    console.log('new Promise()之后')
+
+    // 立即指定成功/失败的回调函数, 此时是pending, 当前不会调用回调函数
+    p.then(
+      value => {
+        console.log('onResolved()', value)
+      },
+      reason => {
+        console.log('onRejected()', reason)
+      },
+    ).then(
+      value => {
+        console.log('onResolved()2', value)
+        throw 5
+      },
+      reason => {
+        console.log('onRejected()2', reason)
+      },
+    ).catch(
+      reason => {
+        console.log('catch onRejected()3', reason)
+        throw 6
+      }
+    ).catch(
+      reason => {
+        console.log('catch onRejected()4', reason)
+      }
+    )
+
+    console.log('.then()之后')
+  </script>
+ -->
+
+  <script>
+    const p1 = Promise.resolve(3)
+    const p2 = Promise.resolve(Promise.resolve(5))
+    const p3 = Promise.reject(6)
+
+    //  p1.then(value => console.log(value))
+    //  p2.then(value => console.log(value))
+    //  p3.catch(reason => console.log(reason))
+
+    // Promise.all([p1, 'abc', p3, p2]).then(
+    /* Promise.all([p1, 'abc', p2]).then(
+      values => {
+        console.log('onResolved()', values)
+      },
+      reason => {
+        console.log('onRejected()', reason)
+      }
+    ) */
+
+    Promise.race([p1, 'abc', p2]).then(
+      value => {
+        console.log('onResolved2()', value)
+      },
+      reason => {
+        console.log('onRejected2()', reason)
+      }
+    )
+  </script>
+</body>
+
+</html>

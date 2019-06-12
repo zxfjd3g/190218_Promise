@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>promise基本使用</title>
+</head>
+<body>
+  
+  <script>
+
+    const p = new Promise((resolve, reject) => {
+      console.log('excutor()')
+      setTimeout(() => {
+        resolve('成功数据')
+        console.log('resolve()之后')
+        // reject('失败数据')
+        // console.log('reject()之后')
+      }, 1000)
+    })
+    console.log('new Promise()之后')
+    // setTimeout(() => {
+      p.then(
+        value => {
+          console.log('收到 ', value)
+        },
+        reason => {
+          console.log('收到 ', reason)
+        },
+      )
+      console.log('.then()之后')
+    // }, 11000);
+    
+
+  </script>
+</body>
+</html>

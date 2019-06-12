@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>01_promise基本使用</title>
+</head>
+<body>
+  
+  <script>
+    // 创建promise对象
+    const promise = new Promise((resolve, reject) => { // 同步的回调函数
+      console.log('excutor()')
+      // 执行异步任务(模拟ajax)
+      setTimeout(() => {
+        const time = Date.now()
+        // 如果成功了, 调用resolve()
+        if (time%2 === 0) {
+          resolve('成功的数据')
+        } else {
+        // 如果失败/出错了, 调用reject()
+          reject('失败的数据')
+        }
+      }, 1000)
+     
+    })
+    console.log('new Promise()之后')
+    // 指定成功/失败的回调函数
+    setTimeout(() => {
+      promise.then(
+        value => { // 异步的回调函数
+          console.log('接收 ', value)
+        },
+        reason => { // 异步的回调函数
+          console.log('接收 ', reason)
+        }
+      )
+      promise.then(
+        value => { // 异步的回调函数
+          console.log('接收2 ', value)
+        },
+        reason => { // 异步的回调函数
+          console.log('接收2 ', reason)
+        }
+      )
+      console.log('.then()之后')
+    }, 500);
+    
+
+
+  </script>
+</body>
+</html>

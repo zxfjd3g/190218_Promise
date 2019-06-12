@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>准备</title>
+</head>
+<body>
+  
+<!--   <script>
+    /* 
+     1. 函数 / 函数对象 / 对象 / 实例对象
+      函数对象: 将一个函数作为对象使用
+      实例对象: new 函数产生的对象, 简称为对象, 比如object对象
+     */
+     function Fn() { // Fn就是一个函数
+       
+     }
+     Fn() // 将Fn作为函数使用
+     console.log(Fn.xxx) // Fn作为对象使用
+     Fn.bind() // Fn作为对象使用
+     const fn = new Fn()  // fn就是实例对象, Fn是构造函数
+
+     // object对象
+     new Object() // {}
+     // person对象
+     new Person()
+
+  </script> -->
+
+  <script>
+    /* 
+    回调函数的分类
+      1). 同步执行的: 数组遍历相关的回调函数 / Promise的excutor函数
+      2). 异步执行的: 定时器回调 / ajax回调 / Promise的成功|失败的回调
+    */
+    const arr = [1, 3, 5]
+    arr.forEach(item => console.log(item)) // 同步执行的回调函数
+    console.log('forEach()之后')
+
+    /* setTimeout(() => { // 异步执行的回调函数
+      console.log('timeout()...')
+    }, 0)
+    console.log('setTimeout()之后') */
+     
+  </script>
+
+
+</body>
+</html>

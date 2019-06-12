@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>promise的语法</title>
+</head>
+<body>
+  <!-- 
+    1. Promise构造函数: (executor) => {} // 在executor函数中执行异步任务
+    2. executor函数:  (resolve, reject) => {} 我们定义, 由引擎调用
+    3. resolve函数: () => {}  由引擎指定, 我们来调用(指定成功的状态及数据)
+    4. reject函数: () => {} 由引擎指定, 我们来调用(指定失败的状态及数据)
+    5. Promise.prototype.then方法: (onResolved, onRejected) => {}
+    6. onResolved函数: (value) => {}  // 用来接收成功的数据
+    7. onRejected函数: (reason) => {} // 用来接收失败的数据
+    8. Promise.prototype.catch方法: (onRejected) => {}
+    9. Promise.resolve方法: (value) => {}
+    10. Promise.reject方法: (reason) => {}
+    11. Promise.all方法:  (promises) => {}
+    12. promise.race方法: (promises) => {}
+   -->
+  <script>
+    // 创建promise对象
+    const promise = new Promise((resolve, reject) => { // 同步的回调函数
+      console.log('excutor()')
+      // 执行异步任务(模拟ajax)
+      setTimeout(() => {
+        const time = Date.now()
+        // 如果成功了, 调用resolve()
+        if (time % 2 === 0) {
+          resolve('成功的数据')
+        } else {
+          // 如果失败/出错了, 调用reject()
+          reject('失败的数据')
+        }
+      }, 1000)
+
+    })
+    console.log('promise', promise)
+    console.log('new Promise()之后')
+    // 指定成功/失败的回调函数
+    setTimeout(() => {
+      promise.then(
+        value => { // 异步的回调函数
+          console.log('接收 ', value)
+        },
+        reason => { // 异步的回调函数
+          console.log('接收 ', reason)
+        }
+      )
+      console.log('.then()之后')
+    }, 1100);
+  </script>
+</body>
+</html>

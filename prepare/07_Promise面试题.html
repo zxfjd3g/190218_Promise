@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>promise_面试题</title>
+</head>
+<body>
+
+<!--<script type="text/javascript">
+  setTimeout(()=>{
+    console.log(1)
+  },0)
+  Promise.resolve().then(()=>{
+    console.log(2)
+  })
+  Promise.resolve().then(()=>{
+    console.log(4)
+  })
+  console.log(3)
+</script>-->
+
+
+<!--
+<script type="text/javascript">
+  setTimeout(() => {
+    console.log(1)
+  }, 0)
+  new Promise((resolve) => {
+    console.log(2)
+    resolve()
+  }).then(() => {
+    console.log(3)
+  }).then(() => {
+    console.log(4)
+  })
+  console.log(5)
+
+</script>-->
+
+<!--
+<script type="text/javascript">
+  const first = () => (new Promise((resolve, reject) => {
+    console.log(3)
+    let p = new Promise((resolve, reject) => {
+      console.log(7)
+      setTimeout(() => {
+        console.log(5)
+        resolve(6)
+      }, 0)
+      resolve(1)
+    })
+    resolve(2)
+    p.then((arg) => {
+      console.log(arg)
+    })
+
+  }))
+
+  first().then((arg) => {
+    console.log(arg)
+  })
+  console.log(4)
+</script>-->
+
+
+<script type="text/javascript">
+  setTimeout(() => {
+    console.log("0")
+  }, 0)
+  new Promise((resolve,reject)=>{
+    console.log("1")
+    resolve()
+  }).then(()=>{        
+    console.log("2")
+    new Promise((resolve,reject)=>{
+      console.log("3")
+      resolve()
+    }).then(()=>{      
+      console.log("4")
+    }).then(()=>{       
+      console.log("5")
+    })
+  }).then(()=>{  
+    console.log("6")
+  })
+
+  new Promise((resolve,reject)=>{
+    console.log("7")
+    resolve()
+  }).then(()=>{         
+    console.log("8")
+  })
+
+</script>
+</body>
+</html>

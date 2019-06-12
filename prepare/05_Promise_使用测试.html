@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>原生Promise_使用测试</title>
+</head>
+<body>
+
+  <!-- 
+    1. promise的链式调用
+    2. 执行顺序问题
+   -->
+<!--    
+<script type="text/javascript">
+  new Promise((resolve, reject) => { // 在Promise内部会同步执行executor函数
+    // resolve(1)  // 指定成功及成功的value
+    reject(1) // 指定失败及失败的reason
+    // throw 1 // 抛出异常
+  }).then(
+    value => {
+      console.log('onResolved()', value)
+      // return 2
+      // throw 2
+      // return Promise.resolve(2)
+      return Promise.reject(2)
+    },
+    reason => {
+      console.log('onRejected()', reason)
+    },
+  ).then(
+    value => {
+      console.log('onResolved()2', value)
+    },
+    reason => {
+      console.log('onRejected()2', reason)
+    }
+  )
+</script>
+ -->
+
+
+<!--
+测试使用
+  Promise.resolve()
+  Promise.reject()
+  Promise.all()
+  Promise.race()
+-->
+
+<script>
+  const p1 = Promise.resolve(3)
+  const p2 = Promise.resolve(Promise.resolve(5))
+  const p3 = Promise.reject(6)
+
+  Promise.all([p1, 'abc', p3, p2]).then(
+    values => {
+      console.log('onResolved()', values)
+    },
+    reason => {
+      console.log('onRejected()', reason)
+    }
+  )
+</script>
+
+
+ 
+<!--
+使用promise简单封装XMLHttpRequest对象(只支持GET)
+-->
+<!--
+<script type="text/javascript">
+  const promiseAjax = function (url) {
+    return new Promise(function (resolve, reject) {
+
+      const handler = function () {
+        if (this.readyState === 4) {
+          if (this.status === 200) {
+            resolve(this.response) // 解析json得到js对象/数组
+          } else {
+            reject(new Error(this.statusText))
+          }
+        }
+      }
+
+      const client = new XMLHttpRequest()
+      client.open("GET", url)
+      client.onreadystatechange = handler
+      client.responseType = "json"
+      client.setRequestHeader("Accept", "application/json")
+      client.send()
+    })
+  }
+
+  promiseAjax('https://api.github.com/search/users?q=aa').then(value => {
+    console.log('成功了', value)
+  }, reason => {
+    console.log('失败了', reason)
+  })
+</script>-->
+
+
+</body>
+</html>

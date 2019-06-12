@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>自定义Promise_使用测试</title>
+</head>
+
+<body>
+  <script src="./lib/Promise2.js"></script>
+  <script>
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // resolve('成功的数据')
+        reject('失败的数据')
+      }, 1000);
+    })
+    console.log('new Promise()之后')
+  </script>
+</body>
+
+</html>

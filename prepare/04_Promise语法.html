@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>promise的语法</title>
+</head>
+<body>
+  
+  <script>
+
+    /* 
+      1). Promise构造函数: Promise (excutor) {}
+      2). excutor函数: 同步执行  (resolve, reject) => {}
+      3). resolve函数: 内部定义成功时我们调用的函数 value => {}
+      4). reject函数: 内部定义失败时我们调用的函数 reason => {}
+      5). Promise.prototype.then方法: (onResolved, onRejected) => {}
+      6). onResolved函数: 成功的回调函数  (value) => {}
+      7). onRejected函数: 失败的回调函数 (reason) => {}
+      8). Promise.prototype.catch方法: (onRejected) => {}
+      9). Promise.resolve方法: (value) => {}
+      10). Promise.reject方法: (reason) => {}
+      11). Promise.all方法: (promises) => {}
+     */
+
+    const p = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const time = Date.now()
+        if (time%2===1) { 
+          resolve('成功数据')
+        } else {
+          reject('失败数据')
+        }
+      }, 1000);
+    })
+
+   /*  p.then(
+      value => {
+        console.log('收到 ', value)
+      },
+      reason => {
+        console.log('收到 ', reason)
+      }
+    ) */
+    
+    p.then(
+      value => {
+        console.log('收到 ', value)
+      }
+    ).catch(
+      reason => {
+      console.log('收到 ', reason)
+      }
+    )
+
+    Promise.resolve(3).then(
+      value => {
+        console.log('收到++ ', value)
+      }
+    ).catch(
+      reason => {
+        console.log('收到-- ', reason)
+      }
+    )
+
+    Promise.reject(4).then(
+      value => {
+        console.log('收到++++', value)
+      }
+    ).catch(
+      reason => {
+        console.log('收到----', reason)
+      }
+    )
+
+  </script>
+</body>
+</html>

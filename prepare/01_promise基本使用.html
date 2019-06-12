@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>promise基本使用</title>
+</head>
+<body>
+  
+  <script>
+
+    // 创建promise对象
+    const p = new Promise((resolve, reject) => {
+      // 执行异步操作(模拟)
+      setTimeout(() => {
+        const time = Date.now()
+        // 成功后, 调用resolve(value)指定成功的值数据
+        if (time%2===1) { // 奇数代表成功
+          resolve('成功数据')
+        // 失败后, 调用reject(reason)指定失败/异常的原因数据
+        } else { // 偶数代表失败
+          reject('失败数据')
+        }
+      }, 1000);
+    })
+
+    // 指定成功和失败的回调函数
+    p.then(
+      value => {
+        console.log('收到 ', value)
+      },
+      reason => {
+        console.log('收到 ', reason)
+      },
+    )
+
+  </script>
+</body>
+</html>
