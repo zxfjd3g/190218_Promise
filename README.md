@@ -1,19 +1,32 @@
 # 1. 相关API/概念
 ## 1). Promise: 许诺  
-    用来创建promise对象的构造函数: function Promise (excutor) {}
-    简洁描述: 一个promise对象用来表示一个异步操作的最终状态（完成或失败），以及该异步操作的结果值
-    详细描述: Promise 对象是一个代理对象（代理一个值），被代理的值在Promise对象创建时是未知的。
-        它允许你为异步操作的成功和失败分别绑定相应的处理回调函数
-        这让异步方法可以像同步方法那样返回，但并不是立即返回最终执行结果，而是一个能代表未来出现的结果的promise对象
-    promise对象的3种状态值
-        pending(未决定的): 初始状态，既不是成功，也不是失败状态。
-        resolved/fulfilled(完成的): 意味着操作成功完成。  
-        rejected(拒绝的): 意味着操作失败。
-    promise对象的状态变化(2种)
-        pending ==> resolved: 调用resolve()
-        pending ==> rejected: 调用reject()
+    1). 抽象表达: js中实现异步的新的解决方案(旧的是谁? 纯callback)
+    2). 具体表达:
+        a. 用来创建promise对象的构造函数: function Promise (excutor) {}
+        b. Promise 对象用于表示一个异步操作的最终状态（完成或失败），以及该异步操作的结果值
+        c. 一个 Promise 就是一个对象，它代表了一个异步操作的最终完成或者失败。
+        d. Promise 对象是一个代理对象（代理一个值），被代理的值在Promise对象创建时可能是未知的。
+            它允许你为异步操作的成功和失败分别绑定相应的处理方法（handlers）。 
+            这让异步方法可以像同步方法那样返回值，但并不是立即返回最终执行结果，
+            而是一个能代表未来出现的结果的promise对象
+    3). 为什么要用Promise?
+         a. 指定回调函数的方式更加灵活: 
+            旧的: 必须在启动异步任务前指定
+            promise: 启动异步任务 => 返回promie对象 => 给promise对象绑定回调函数(甚至可以在异步任务结束后指定/多个)
+        b. 支持链式调用, 可以解决回调地狱问题
+            什么是回调地狱? 回调函数嵌套调用, 外部回调函数异步执行的结果是嵌套的回调函数执行的条件
+            回调地狱的缺点?  不便于阅读 / 不便于异常处理
+            promise链式调用解决
+            async/await终极解决方案
+    3). promise对象的3种状态值
+        a. pending(未决定的): 初始状态，既不是成功，也不是失败状态。
+        b. resolved/fulfilled(完成的): 意味着操作成功完成。  
+        c. rejected(拒绝的): 意味着操作失败。
+    4). promise对象的状态变化(2种)
+        a. pending ==> resolved: 调用resolve()
+        b. pending ==> rejected: 调用reject()
         注意: promise的状态确定后就不可再转换为其它状态
-    promise对象内部隐藏的属性
+    5). promise对象内部隐藏的属性
         [[PromiseStatus]]: 内部变量, 存储promise对象当前的状态值
         [[PromiseValue]]: 内部变量, 存储成功后的value或失败后的reason
 
@@ -129,3 +142,19 @@
     3). 如果有一个结果为失败, 直接reject(reason)
     4). 如果当前promise成功了, 保存value到数组values中对应的位置
     5). 只有当所有promise都成功了, resolve(values)
+
+## 6). Promise.race(promises)的实现
+    1). 创建一个新的promise对象并返回
+    2). 在执行器内遍历所有promises, 并获取每个promise的结果
+    3). 每个promise成功了, 直接调用resolve(value), 但注意只有第一个有效
+    3). 每个promise失败了, 直接调用reject(reason), 但注意只有第一个有效
+
+## 3. JS执行流程
+  1). 整体流程
+      script中的初始化同步代码 ===> 执行回调队列中的代码(异步执行)
+  2). 2种回调队列
+      宏队列: 缓存宏任务--定时器回调 / DOM事件监听回调 / AJAX请求回调
+      微队列: 缓存微任务--Promise成功/失败回调 / Mutation回调
+  3). 队列代码的执行顺序
+      必须先取出所有微任务依次执行完, 才能取出一个宏任务执行
+      微任务的优先级高
