@@ -17,7 +17,7 @@
             什么是回调地狱? 回调函数嵌套调用, 外部回调函数异步执行的结果是嵌套的回调函数执行的条件
             回调地狱的缺点?  不便于阅读 / 不便于异常处理
             promise链式调用解决
-            async/await终极解决方案
+            async/await终极解决方案: 同步编码方式
     3). promise对象的3种状态值
         a. pending(未决定的): 初始状态，既不是成功，也不是失败状态。
         b. resolved/fulfilled(完成的): 意味着操作成功完成。  
@@ -75,7 +75,7 @@
         
 ## 8). catch: 捕获
     promise对象的方法: catch(onRejected函数)
-    是then()的语法糖方法, 相当于: then(null, onRejected函数)
+    是then()的语法糖方法, 相当于: then(undeinfed onRejected函数)
     
 ## 9). Promise.resolve()
     手动创建一个已经resolve的promise的快捷方法: Promise.resolve(value/promise)
@@ -88,6 +88,8 @@
     用来实现批量执行多个promise的异步操作, 返回一个新的promise: Promise.all([promise1, promise2, ...])
     只有当所有异步操作都resolved后, 返回的promise才会变为resolved状态, 只要有一个变为rejected, 返回的promise直接变为rejected
     面试题: 实现一次发多个请求, 只有都成功后才去做处理?
+## 12) Promise.race([p1, p2, p3])
+    用来实现批量执行多个promise的异步操作,返回一个新的promise, 它的结果由第一个完成的promise的结果决定
 
 # 2. 自定义Promise
 ## 1). 整体结构
